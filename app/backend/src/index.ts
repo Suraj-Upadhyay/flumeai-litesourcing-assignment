@@ -4,8 +4,9 @@ import fastifyCors from "@fastify/cors";
 
 import { CreateRequestContext, errorHandler } from "@/middlewares";
 import { v1Router } from "./routes";
+import { getEnvironmentConfig } from "./config";
 
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = getEnvironmentConfig().PORT;
 
 const app = fastify({
   logger: true,
@@ -24,7 +25,7 @@ await app.register(fastifyCors, {
   origin: (origin, cb) => {
     const allowedOrigins = [
       "http://localhost:3000",
-      process.env.FRONTEND_ORIGIN,
+      getEnvironmentConfig().FRONTEND_ORIGIN,
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true);
@@ -51,7 +52,7 @@ app.get("/", async (_, reply) => {
 app.register(errorHandler);
 
 try {
-  if (process.env.NODE_ENV !== "test") {
+  if (getEnvironmentConfig().NODE_ENV !== "test") {
     await app.listen({ port: PORT, host: "0.0.0.0" });
     await app.ready();
     console.log(`🚀 Server listening on port ${PORT}`);
