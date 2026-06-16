@@ -53,7 +53,7 @@ export class AuthRepository extends AuthRepositoryInterface {
       return rows[0].password_hash;
     } catch (error) {
       console.error("An error occurred in getHashedUserPassword: ", error);
-      throw new InternalServerError("Could not ");
+      throw new InternalServerError("Could not getHashedUserPassword");
     }
   }
 }

@@ -4,9 +4,8 @@ import { AuthRepositoryInterface } from "./auth.repository";
 import { getEnvironmentConfig, UniqueConstraintDBErrorCode } from "@/config";
 import bcrypt from "bcryptjs";
 import type { InsertUser } from "@/db/models/user.model";
-import { BadRequest, InternalServerError, Unauthorized } from "@/utility";
+import { InternalServerError, Unauthorized } from "@/utility";
 import { Transaction } from "@/db";
-import { DatabaseError } from "pg";
 
 @AbstractClass()
 export abstract class AuthServiceInterface {
