@@ -3,6 +3,7 @@ import { Unauthorized } from "../utility/error.util";
 import type { FastifyRequest } from "fastify";
 import { getEnvironmentConfig, UserTokenName } from "@/config";
 import type { IToken } from "@/types/token.type";
+import { asyncLocalStorage } from "@/utility";
 
 export const verifyJWT = (tokenName: string) => {
   return async (req: FastifyRequest) => {
@@ -22,6 +23,8 @@ export const verifyJWT = (tokenName: string) => {
     ) as unknown as IToken;
 
     req.token = { ...req.token, ...decodedToken };
+
+    asyncLocalStorage.getStore()?.set("username", decodedToken.username);
   };
 };
 

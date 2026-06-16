@@ -1,3 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
 export const asyncLocalStorage = new AsyncLocalStorage<Map<string, any>>();
+
+export const getUserNameFromContext = (): string => {
+  return asyncLocalStorage.getStore()?.get("username");
+};
