@@ -1,0 +1,11 @@
+{
+  "name": "migration",
+  "type": "commonjs",
+  "scripts": {
+    "migrate": "bun run --env-file='./.env' node-pg-migrate --config-file migrate.config.js"
+  },
+  "devDependencies": {
+    "@types/node-pg-migrate": "^2.3.1",
+    "node-pg-migrate": "^7.7.1"
+  }
+}
