@@ -50,9 +50,7 @@ export class ProjectController {
     res: FastifyReply,
   ) {
     const projects = await this.projectService.getProjects(req.query);
-    res
-      .status(200)
-      .send(new ApiResponse(200, { projects }, "Fetched projects"));
+    res.status(200).send(new ApiResponse(200, projects, "Fetched projects"));
   }
 
   @Post("/project")
@@ -63,7 +61,7 @@ export class ProjectController {
     res: FastifyReply,
   ) {
     const project = await this.projectService.createProject(req.body);
-    res.status(201).send(new ApiResponse(201, { project }, "Project created"));
+    res.status(201).send(new ApiResponse(201, project, "Project created"));
   }
 
   @Get("/project/:projectId")
@@ -78,7 +76,7 @@ export class ProjectController {
     );
     res
       .status(200)
-      .send(new ApiResponse(200, { project }, "Fetched project details"));
+      .send(new ApiResponse(200, project, "Fetched project details"));
   }
 
   @Patch("/project/:projectId/status")
@@ -98,7 +96,7 @@ export class ProjectController {
     );
     res
       .status(200)
-      .send(new ApiResponse(200, { project }, "Project status updated"));
+      .send(new ApiResponse(200, project, "Project status updated"));
   }
 
   @Get("/project/:projectId/summary")
@@ -113,7 +111,7 @@ export class ProjectController {
     );
     res
       .status(200)
-      .send(new ApiResponse(200, { summary }, "Fetched project summary"));
+      .send(new ApiResponse(200, summary, "Fetched project summary"));
   }
 
   @Get("/project/:projectId/spec-item")
@@ -126,9 +124,7 @@ export class ProjectController {
     const specItems = await this.projectService.getSpecItems(
       req.params.projectId,
     );
-    res
-      .status(200)
-      .send(new ApiResponse(200, { specItems }, "Fetched spec items"));
+    res.status(200).send(new ApiResponse(200, specItems, "Fetched spec items"));
   }
 
   @Post("/project/:projectId/spec-item")
@@ -143,9 +139,7 @@ export class ProjectController {
       req.params.projectId,
       req.body,
     );
-    res
-      .status(201)
-      .send(new ApiResponse(201, { specItem }, "Spec item created"));
+    res.status(201).send(new ApiResponse(201, specItem, "Spec item created"));
   }
 
   @Get("/project/:projectId/spec-item/:specItemId/option")
@@ -161,7 +155,7 @@ export class ProjectController {
     );
     res
       .status(200)
-      .send(new ApiResponse(200, { options }, "Fetched sourcing options"));
+      .send(new ApiResponse(200, options, "Fetched sourcing options"));
   }
 
   @Post("/project/:projectId/spec-item/:specItemId/option")
@@ -216,9 +210,7 @@ export class ProjectController {
       req.params.specItemId,
       req.body,
     );
-    res
-      .status(200)
-      .send(new ApiResponse(200, { specItem }, "Spec item updated"));
+    res.status(200).send(new ApiResponse(200, specItem, "Spec item updated"));
   }
 
   @Delete("/project/:projectId/spec-item/:specItemId")

@@ -16,6 +16,6 @@ export class UomController {
     const uoms = await this.uomService.getUoms();
     res
       .status(200)
-      .send(new ApiResponse(200, { uoms }, "Fetched units of measure"));
+      .send(new ApiResponse(200, uoms, "Fetched units of measure"));
   }
 }

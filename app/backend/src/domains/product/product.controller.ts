@@ -24,6 +24,6 @@ export class ProductController {
     const products = await this.productService.getProducts(req.query);
     res
       .status(200)
-      .send(new ApiResponse(200, { products }, "Fetched global products"));
+      .send(new ApiResponse(200, products, "Fetched global products"));
   }
 }

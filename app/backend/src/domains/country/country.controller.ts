@@ -14,8 +14,6 @@ export class CountryController {
   @Use(verifyLogin)
   async getCountries(req: FastifyRequest, res: FastifyReply) {
     const countries = await this.countryService.getCountries();
-    res
-      .status(200)
-      .send(new ApiResponse(200, { countries }, "Fetched countries"));
+    res.status(200).send(new ApiResponse(200, countries, "Fetched countries"));
   }
 }

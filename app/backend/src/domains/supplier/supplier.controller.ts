@@ -48,9 +48,7 @@ export class SourcingController {
     const suppliers = await this.sourcingService.getSuppliers(req.query);
     res
       .status(200)
-      .send(
-        new ApiResponse(200, { suppliers }, "Successfully fetched suppliers"),
-      );
+      .send(new ApiResponse(200, suppliers, "Successfully fetched suppliers"));
   }
 
   @Get("/supplier/:supplierId")
@@ -66,11 +64,7 @@ export class SourcingController {
     res
       .status(200)
       .send(
-        new ApiResponse(
-          200,
-          { supplier },
-          "Successfully fetched supplier details",
-        ),
+        new ApiResponse(200, supplier, "Successfully fetched supplier details"),
       );
   }
 
@@ -94,7 +88,7 @@ export class SourcingController {
       .send(
         new ApiResponse(
           200,
-          { products },
+          products,
           "Successfully fetched supplier products",
         ),
       );
@@ -110,9 +104,7 @@ export class SourcingController {
     const supplier = await this.sourcingService.createSupplier(req.body);
     res
       .status(201)
-      .send(
-        new ApiResponse(201, { supplier }, "Successfully created supplier"),
-      );
+      .send(new ApiResponse(201, supplier, "Successfully created supplier"));
   }
 
   @Post("/supplier/:supplierId/product")
@@ -132,7 +124,7 @@ export class SourcingController {
       .send(
         new ApiResponse(
           201,
-          { product },
+          product,
           "Successfully created product for supplier",
         ),
       );
@@ -155,9 +147,7 @@ export class SourcingController {
     );
     res
       .status(200)
-      .send(
-        new ApiResponse(200, { supplier }, "Successfully updated supplier"),
-      );
+      .send(new ApiResponse(200, supplier, "Successfully updated supplier"));
   }
 
   @Delete("/supplier/:supplierId")
@@ -189,11 +179,7 @@ export class SourcingController {
     res
       .status(200)
       .send(
-        new ApiResponse(
-          200,
-          { product },
-          "Successfully updated supplier product",
-        ),
+        new ApiResponse(200, product, "Successfully updated supplier product"),
       );
   }
 

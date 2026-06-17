@@ -41,7 +41,7 @@ export class CategoryController {
     res
       .status(200)
       .send(
-        new ApiResponse(200, { categories }, "Successfully fetched categories"),
+        new ApiResponse(200, categories, "Successfully fetched categories"),
       );
   }
 
@@ -58,11 +58,7 @@ export class CategoryController {
     res
       .status(200)
       .send(
-        new ApiResponse(
-          200,
-          { category },
-          "Successfully fetched category details",
-        ),
+        new ApiResponse(200, category, "Successfully fetched category details"),
       );
   }
 
@@ -76,9 +72,7 @@ export class CategoryController {
     const category = await this.categoryService.createCategory(req.body);
     res
       .status(201)
-      .send(
-        new ApiResponse(201, { category }, "Successfully created category"),
-      );
+      .send(new ApiResponse(201, category, "Successfully created category"));
   }
 
   @Patch("/category/:categoryId")
@@ -98,9 +92,7 @@ export class CategoryController {
     );
     res
       .status(200)
-      .send(
-        new ApiResponse(200, { category }, "Successfully updated category"),
-      );
+      .send(new ApiResponse(200, category, "Successfully updated category"));
   }
 
   @Delete("/category/:categoryId")
