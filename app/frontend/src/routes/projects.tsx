@@ -1,9 +1,6 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { ProjectPage } from "@/page/ProjectPage";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/projects")({
-  component: () => (
-    <div className="w-full h-full relative">
-      <Outlet />
-    </div>
-  ),
+  component: ProjectPage,
 });
