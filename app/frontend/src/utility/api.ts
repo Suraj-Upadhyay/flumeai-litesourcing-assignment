@@ -1,7 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import type { IApiResponse } from "../types/apiresponse.type";
 
-const API_URL = import.meta.env.VITE_PUBLIC_API_URL;
+const API_URL = import.meta.env.VITE_PUBLIC_API_URL + "/api/v1";
 
 const axiosAPICall = axios.create({
   baseURL: API_URL,

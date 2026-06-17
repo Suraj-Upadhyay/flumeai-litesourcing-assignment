@@ -85,7 +85,10 @@ export function ProjectsHeader() {
           Manage all construction sourcing projects
         </p>
       </div>
-      <Button asChild>
+      <Button
+        asChild
+        className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md px-2 py-1 text-center"
+      >
         <Link to="/projects/new">+ New Project</Link>
       </Button>
     </div>

@@ -23,8 +23,10 @@ export function SidebarNavigation() {
 export function UserProfile() {
   return (
     <div className="mt-auto flex items-center gap-3 p-4 border-t border-slate-800">
-      <Avatar className="h-8 w-8">
-        <AvatarFallback className="bg-slate-700 text-xs">PT</AvatarFallback>
+      <Avatar className="h-8 w-8 rounded-full">
+        <AvatarFallback className="bg-slate-700 h-full w-full text-xs rounded-full">
+          PT
+        </AvatarFallback>
       </Avatar>
       <span className="text-sm font-medium">Procurement Team</span>
     </div>
