@@ -60,8 +60,14 @@ export const GlobalCatalogPane = ({
   const { projectId, specItemId } = routeApi.useParams();
   const navigate = useNavigate({ from: routeApi.useMatch().fullPath });
 
-  const categoryIds = category ? category.split(",").map(Number) : undefined;
-  const supplierIds = supplier ? supplier.split(",").map(Number) : undefined;
+  const selectedCategoryIds = category ? category.split(",") : undefined;
+  const selectedSupplierIds = supplier ? supplier.split(",") : undefined;
+  const categoryIds = selectedCategoryIds
+    ? selectedCategoryIds.map(Number)
+    : undefined;
+  const supplierIds = selectedSupplierIds
+    ? selectedSupplierIds.map(Number)
+    : undefined;
 
   // 1. Fetch data for table
   const { data: products = [] } = useQuery(
@@ -81,7 +87,7 @@ export const GlobalCatalogPane = ({
   const { mutate: attachOption } = useAttachSourcingOption();
 
   const handleFilterChange = (
-    key: "category" | "supplier",
+    key: "category_ids" | "supplier_ids",
     values: string[]
   ) => {
     navigate({
@@ -122,8 +128,10 @@ export const GlobalCatalogPane = ({
               payload: { product_id: productId },
             })
           }
-          onCategoryChange={(vals) => handleFilterChange("category", vals)}
-          onSupplierChange={(vals) => handleFilterChange("supplier", vals)}
+          selectedSupplierIds={selectedSupplierIds}
+          selectedCategoryIds={selectedCategoryIds}
+          onCategoryChange={(vals) => handleFilterChange("category_ids", vals)}
+          onSupplierChange={(vals) => handleFilterChange("supplier_ids", vals)}
         />
       </CardContent>
     </Card>

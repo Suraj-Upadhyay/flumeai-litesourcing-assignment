@@ -14,5 +14,8 @@
   "workspaces": [
     "app/**/*",
     "packages/**/*"
-  ]
+  ],
+  "dependencies": {
+    "ins": "^0.0.0"
+  }
 }

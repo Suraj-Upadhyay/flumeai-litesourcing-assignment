@@ -21,6 +21,8 @@ interface Props {
   onAttach: (productId: number) => void;
   categories: { label: string; value: string }[];
   suppliers: { label: string; value: string }[];
+  selectedCategoryIds?: string[];
+  selectedSupplierIds?: string[];
   onCategoryChange: (values: string[]) => void;
   onSupplierChange: (values: string[]) => void;
 }
@@ -30,6 +32,8 @@ export const GlobalProductSearchTable = ({
   onAttach,
   categories,
   suppliers,
+  selectedCategoryIds,
+  selectedSupplierIds,
   onCategoryChange,
   onSupplierChange,
 }: Props) => {
@@ -64,11 +68,13 @@ export const GlobalProductSearchTable = ({
         <MultiSelect
           label="Filter Categories"
           options={categories}
+          selected={selectedCategoryIds}
           onChange={onCategoryChange}
         />
         <MultiSelect
           label="Filter Suppliers"
           options={suppliers}
+          selected={selectedSupplierIds}
           onChange={onSupplierChange}
         />
       </div>

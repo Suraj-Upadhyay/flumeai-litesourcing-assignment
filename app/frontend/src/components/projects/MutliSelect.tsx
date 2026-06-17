@@ -20,26 +20,29 @@ import { cn } from "@packages/ui/lib/utils";
 interface MultiSelectProps {
   label: string;
   options: { label: string; value: string }[];
+  selected?: string[];
   onChange: (values: string[]) => void;
 }
 
-export function MultiSelect({ label, options, onChange }: MultiSelectProps) {
+export function MultiSelect({
+  label,
+  selected,
+  options,
+  onChange,
+}: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>([]);
 
   const toggleOption = (value: string) => {
-    const newSelected = selected.includes(value)
-      ? selected.filter((v) => v !== value)
-      : [...selected, value];
+    const newSelected = (selected ?? []).includes(value)
+      ? (selected ?? []).filter((v) => v !== value)
+      : [...(selected ?? []), value];
 
-    setSelected(newSelected);
     onChange(newSelected);
   };
 
   const removeOption = (e: React.MouseEvent, value: string) => {
     e.stopPropagation();
-    const newSelected = selected.filter((v) => v !== value);
-    setSelected(newSelected);
+    const newSelected = (selected ?? []).filter((v) => v !== value);
     onChange(newSelected);
   };
 
@@ -53,10 +56,10 @@ export function MultiSelect({ label, options, onChange }: MultiSelectProps) {
           className="w-62.5 justify-between h-auto min-h-10"
         >
           <div className="flex flex-wrap gap-1">
-            {selected.length === 0 && (
+            {selected?.length === 0 && (
               <span className="text-muted-foreground font-normal">{label}</span>
             )}
-            {selected.map((val) => (
+            {selected?.map((val) => (
               <Badge key={val} variant="secondary" className="mr-1">
                 {options.find((o) => o.value === val)?.label}
                 <X
@@ -83,7 +86,7 @@ export function MultiSelect({ label, options, onChange }: MultiSelectProps) {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selected.includes(option.value)
+                      selected?.includes(option.value)
                         ? "opacity-100"
                         : "opacity-0"
                     )}

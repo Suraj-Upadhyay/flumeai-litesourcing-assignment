@@ -35,18 +35,28 @@ export class ProductRepositoryPrimary extends ProductRepositoryInterface {
         JOIN categories c ON p.category_id = c.id
         JOIN units_of_measure u ON p.unit_of_measure_id = u.id
         WHERE ($1::text IS NULL OR p.product_name ILIKE '%' || $1 || '%')
-          AND ($2::int IS NULL OR p.category_id = $2)
-          AND ($3::int IS NULL OR p.supplier_id = $3)
+          AND ($2::int[] IS NULL OR p.category_id = ANY($2::int[]))
+          AND ($3::int[] IS NULL OR p.supplier_id = ANY($3::int[]))
         ORDER BY p.id DESC
         LIMIT $4 OFFSET $5;
       `;
+
+      // Helper to force an array and format as Postgres array string {1,2}
+      const formatArray = (input: any) => {
+        if (!input) return null;
+        // Ensure input is an array
+        const arr = Array.isArray(input) ? input : [input];
+        return arr.length > 0 ? `{${arr.join(",")}}` : null;
+      };
+
       const values = [
         filters.query || null,
-        filters.category_id || null,
-        filters.supplier_id || null,
-        filters.limit,
-        filters.offset,
+        formatArray(filters.category_ids),
+        formatArray(filters.supplier_ids),
+        filters.limit || 20,
+        filters.offset || 0,
       ];
+
       const { rows } = await this.client.query(query, values);
       return rows;
     } catch (error) {
