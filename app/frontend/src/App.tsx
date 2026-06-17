@@ -5,6 +5,7 @@ import { routeTree } from "./routeTree.gen";
 
 import { queryClient } from "./utility/queryClient";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ToastProvider } from "./components/root/toast";
 
 const router = createRouter({
   routeTree,
@@ -31,7 +32,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <InnerApp />
+        <ToastProvider>
+          <InnerApp />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

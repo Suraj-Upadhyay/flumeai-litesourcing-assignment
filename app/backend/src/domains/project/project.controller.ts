@@ -79,6 +79,21 @@ export class ProjectController {
       .send(new ApiResponse(200, project, "Fetched project details"));
   }
 
+  @Get("/project/:projectId/status")
+  @Use(verifyLogin)
+  @ParamSchema(ProjectIdParamSchema)
+  async getProjectStatusById(
+    req: FastifyRequest<{ Params: IProjectIdParam }>,
+    res: FastifyReply,
+  ) {
+    const status = await this.projectService.getProjectStatus(
+      req.params.projectId,
+    );
+    res
+      .status(200)
+      .send(new ApiResponse(200, { status }, "Fetched project status"));
+  }
+
   @Patch("/project/:projectId/status")
   @Use(verifyLogin)
   @ParamSchema(ProjectIdParamSchema)

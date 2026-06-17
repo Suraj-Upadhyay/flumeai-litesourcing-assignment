@@ -14,10 +14,18 @@ import type {
 } from "./project.schema";
 import { BadRequest, NotFound } from "@/utility"; // Standard HTTP errors
 
+const STATUS_TRANSITIONS: Record<IProjectStatus, IProjectStatus[]> = {
+  draft: ["sourcing"],
+  sourcing: ["draft", "quoted"],
+  quoted: ["sourcing", "closed"],
+  closed: ["quoted"],
+};
+
 @AbstractClass()
 export abstract class ProjectServiceInterface {
   abstract getProjects(filters: IGetProjectFilterQuery): Promise<IProjectDb[]>;
   abstract getProjectById(id: number): Promise<IProjectDb>;
+  abstract getProjectStatus(id: number): Promise<IProjectStatus>;
   abstract createProject(data: ICreateProjectBody): Promise<IProjectDb>;
   abstract updateProjectStatus(
     id: number,
@@ -79,13 +87,31 @@ export class ProjectServicePrimary extends ProjectServiceInterface {
 
   async updateProjectStatus(
     id: number,
-    status: IProjectStatus,
+    newStatus: IProjectStatus,
   ): Promise<IProjectDb> {
     const project = await this.getProjectById(id);
+    const currentStatus = project.project_status;
 
-    // Guardrail: Cannot move to Quoted or Closed unless all spec items have a winning option
-    if (status === "quoted" || status === "closed") {
+    // 1. Validate Transition Flow
+    if (
+      currentStatus !== newStatus &&
+      !STATUS_TRANSITIONS[currentStatus].includes(newStatus)
+    ) {
+      throw new BadRequest(
+        `Invalid transition: Cannot move from ${currentStatus} to ${newStatus}.`,
+      );
+    }
+
+    // 2. Guardrail: Entering 'quoted' or 'closed' requires all spec items to have a winner
+    if (newStatus === "quoted" || newStatus === "closed") {
       const specItems = await this.projectRepository.getSpecItems(id);
+
+      // Check if project has items
+      if (specItems.length === 0) {
+        throw new BadRequest(
+          "Cannot advance status: Project must have at least one spec item.",
+        );
+      }
 
       for (const item of specItems) {
         const options = await this.projectRepository.getSourcingOptions(
@@ -94,13 +120,16 @@ export class ProjectServicePrimary extends ProjectServiceInterface {
         const hasWinner = options.some((opt) => opt.is_winning);
         if (!hasWinner) {
           throw new BadRequest(
-            `Cannot change status to ${status}. Spec item '${item.name}' lacks a winning sourcing option.`,
+            `Cannot change status to ${newStatus}. Spec item '${item.name}' lacks a selected winning sourcing option.`,
           );
         }
       }
     }
 
-    return await this.projectRepository.updateProjectStatus(id, status);
+    // 3. Guardrail: Prevent reopening if it would violate data integrity
+    // (e.g., if you had logic to clear winners when going back to 'sourcing')
+
+    return await this.projectRepository.updateProjectStatus(id, newStatus);
   }
 
   async getSpecItems(projectId: number): Promise<ISpecItemDb[]> {
@@ -200,5 +229,26 @@ export class ProjectServicePrimary extends ProjectServiceInterface {
       productId,
     );
     if (!deleted) throw new NotFound(`Sourcing option not found.`);
+  }
+
+  async getProjectStatus(projectId: number): Promise<IProjectStatus> {
+    const specItems = await this.projectRepository.getSpecItems(projectId);
+
+    if (specItems.length === 0) return "draft";
+
+    let allHaveOptions = true;
+    let allHaveWinners = true;
+
+    for (const item of specItems) {
+      const options = await this.projectRepository.getSourcingOptions(item.id);
+      if (options.length === 0) allHaveOptions = false;
+      if (!options.some((opt) => opt.is_winning)) allHaveWinners = false;
+    }
+
+    if (!allHaveOptions) return "draft";
+    if (allHaveOptions && !allHaveWinners) return "sourcing";
+    if (allHaveWinners) return "quoted";
+
+    return "draft"; // Default fallback
   }
 }

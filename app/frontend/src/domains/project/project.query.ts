@@ -55,6 +55,12 @@ export const projectQueries = {
         projectService.getSpecItemSourcingOptions(projectId, specItemId),
       staleTime: 30_000,
     }),
+  status: (id: number) =>
+    queryOptions({
+      queryKey: [...projectQueries.details(), id, "status"],
+      queryFn: () => projectService.getProjectStatus(id),
+      staleTime: 5_000, // Shorter stale time for dynamic status
+    }),
 };
 
 export const useCreateProject = () => {
@@ -77,8 +83,11 @@ export const useChangeProjectStatus = () => {
       projectId: number;
       payload: IUpdateProjectStatusBody;
     }) => projectService.changeProjectStatus(projectId, payload),
-    onSuccess: () => {
+    onSuccess: (_, { projectId }) => {
       queryClient.invalidateQueries({ queryKey: projectQueries.all() }); // Updates list & detail
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.status(projectId).queryKey,
+      });
     },
   });
 };
@@ -94,6 +103,9 @@ export const useCreateProjectSpecItem = () => {
       payload: ICreateSpecItemBody;
     }) => projectService.createProjectSpecItem(projectId, payload),
     onSuccess: (_, { projectId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.status(projectId).queryKey,
+      });
       queryClient.invalidateQueries({
         queryKey: projectQueries.specItems(projectId).queryKey,
       });
@@ -135,6 +147,9 @@ export const useSetWinningOption = () => {
       productId: number;
     }) => projectService.setWinningOption(projectId, specItemId, productId),
     onSuccess: (_, { projectId, specItemId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.status(projectId).queryKey,
+      });
       queryClient.invalidateQueries({
         queryKey: projectQueries.sourcingOptions(projectId, specItemId)
           .queryKey,

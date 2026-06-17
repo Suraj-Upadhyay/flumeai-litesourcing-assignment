@@ -27,6 +27,13 @@ export function ProjectBreadcrumbs({
   );
 }
 
+const ALLOWED_FLOW: Record<IProjectStatus, IProjectStatus[]> = {
+  draft: ["sourcing"],
+  sourcing: ["draft", "quoted"],
+  quoted: ["sourcing", "closed"],
+  closed: ["quoted"],
+};
+
 interface ProjectPipelineProps {
   status: IProjectStatus;
   onStatusChange: (newStatus: IProjectStatus) => void;
@@ -38,34 +45,42 @@ export function ProjectPipeline({
 }: ProjectPipelineProps) {
   const stages: IProjectStatus[] = ["draft", "sourcing", "quoted", "closed"];
 
+  console.log("status: ", status);
+
   return (
     <div className="flex items-center gap-3 mb-6">
-      {stages.map((stage, index) => (
-        <Fragment key={stage}>
-          <button
-            onClick={() => onStatusChange(stage)}
-            className="cursor-pointer transition-opacity hover:opacity-80"
-          >
-            <Badge
-              variant={status === stage ? "default" : "secondary"}
-              className={
-                status === stage
-                  ? "bg-blue-100 text-blue-800 hover:bg-blue-200"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }
+      {stages.map((stage, index) => {
+        const isCurrent = status === stage;
+        // Check if transition is allowed
+        const isClickable = isCurrent || ALLOWED_FLOW[status].includes(stage);
+
+        return (
+          <Fragment key={stage}>
+            <button
+              disabled={!isClickable}
+              onClick={() => onStatusChange(stage)}
+              className={`cursor-${isClickable ? "pointer" : "not-allowed"} transition-opacity ${!isClickable && "opacity-50"}`}
             >
-              {stage.charAt(0).toUpperCase() + stage.slice(1)}
-            </Badge>
-          </button>
-          {index < stages.length - 1 && (
-            <span className="text-slate-300">➔</span>
-          )}
-        </Fragment>
-      ))}
+              <Badge
+                variant={isCurrent ? "default" : "secondary"}
+                className={
+                  isCurrent
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-slate-100 text-slate-600"
+                }
+              >
+                {stage.charAt(0).toUpperCase() + stage.slice(1)}
+              </Badge>
+            </button>
+            {index < stages.length - 1 && (
+              <span className="text-slate-300">➔</span>
+            )}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
-
 export function ProjectMetrics({ summary }: { summary: IProjectSummary }) {
   return (
     <div className="grid grid-cols-3 gap-6 border-t pt-6">

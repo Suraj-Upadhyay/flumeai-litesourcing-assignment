@@ -10,6 +10,7 @@ import type {
   ICreateSpecItemBody,
   IUpdateSpecItemBody,
   IAttachSourcingOptionBody,
+  IProjectStatus,
 } from "./project.types";
 
 export const getAllProjects = async (params?: IGetProjectFilterQuery) => {
@@ -131,4 +132,11 @@ export const deleteSourcingOption = async (
     `/project/project/${projectId}/spec-item/${specItemId}/option/${productId}`
   );
   return response.data;
+};
+
+export const getProjectStatus = async (projectId: number) => {
+  const response = await axiosInstance.get<{ status: IProjectStatus }>(
+    `/project/project/${projectId}/status`
+  );
+  return response.data.status;
 };

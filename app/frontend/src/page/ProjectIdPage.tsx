@@ -15,16 +15,39 @@ import {
   projectQueries,
   useChangeProjectStatus,
 } from "@/domains/project/project.query";
+import { useToast } from "@/components/root/toast";
+import type { IProjectStatus } from "@/domains/project/project.types";
 
 const routeApi = getRouteApi("/projects/$projectId");
 
 export const ProjectIdPage = () => {
   const { projectId } = routeApi.useParams();
   const id = Number(projectId);
+  const { toast } = useToast();
 
+  const { data: status, isLoading } = useQuery(projectQueries.status(id));
   const { data: project } = useQuery(projectQueries.detail(id));
   const { data: summary } = useQuery(projectQueries.summary(id));
   const { mutate: updateStatus } = useChangeProjectStatus();
+
+  const handleStatusChange = (newStatus: IProjectStatus) => {
+    updateStatus(
+      {
+        projectId: id,
+        payload: { project_status: newStatus },
+      },
+      {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (error: any) => {
+          // Display the specific error message from the backend guardrails
+          toast({
+            description: error.message || "An unexpected error occurred.",
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,16 +63,15 @@ export const ProjectIdPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {project && (
+            {isLoading ? (
+              <p>Loading status...</p>
+            ) : status ? (
               <ProjectPipeline
-                status={project.project_status}
-                onStatusChange={(newStatus) =>
-                  updateStatus({
-                    projectId: id,
-                    payload: { project_status: newStatus },
-                  })
-                }
+                status={status}
+                onStatusChange={handleStatusChange}
               />
+            ) : (
+              <p>No status available.</p>
             )}
             {summary && <ProjectMetrics summary={summary} />}
           </CardContent>
