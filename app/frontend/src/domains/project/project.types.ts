@@ -25,7 +25,7 @@ export interface ICreateSpecItemBody {
   unit_of_measure_id: number;
 }
 
-export interface IUpdateSpecItemBody extends Partial<ICreateSpecItemBody> {}
+export type IUpdateSpecItemBody = Partial<ICreateSpecItemBody>;
 
 export interface IAttachSourcingOptionBody {
   product_id: number;
