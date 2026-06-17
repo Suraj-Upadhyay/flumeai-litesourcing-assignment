@@ -7,7 +7,7 @@
   },
   "item": [
     {
-      "name": "Authentication",
+      "name": "authentication",
       "item": [
         {
           "name": "logout",
@@ -76,6 +76,918 @@
               "path": [
                 "auth",
                 "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "category",
+      "item": [
+        {
+          "name": "get all categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/category/category",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "category",
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get category by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/category/category/:categoryId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "category",
+                "category",
+                ":categoryId"
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"category1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/category/category",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "category",
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "modify category by id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"category2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/category/category/:categoryId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "category",
+                "category",
+                ":categoryId"
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete a category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/category/category/:categoryId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "category",
+                "category",
+                ":categoryId"
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "country",
+      "item": [
+        {
+          "name": "get all countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/country/country",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "country",
+                "country"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "product",
+      "item": [
+        {
+          "name": "get filtered products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/product/product?query&category_id&supplier_id&limit&offset",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "product",
+                "product"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": null,
+                  "description": "optional"
+                },
+                {
+                  "key": "category_id",
+                  "value": null,
+                  "description": "optional"
+                },
+                {
+                  "key": "supplier_id",
+                  "value": null,
+                  "description": "optional"
+                },
+                {
+                  "key": "limit",
+                  "value": null,
+                  "description": "mandatory"
+                },
+                {
+                  "key": "offset",
+                  "value": null,
+                  "description": "mandatory"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "project",
+      "item": [
+        {
+          "name": "get all projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create a new project",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"project_name\": \"project 1\",\n    \"client_name\": \"client 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/project/project",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get project by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "change project status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"project_status\": \"draft\" // \"sourcing\", \"quoted\", \"closed\", \"draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/status",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get project summar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/summary",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "summary"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get project spec items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create project spec-item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"spec-item 1\",\n    \"description\": \"very good spec item\", // optional\n    \"category_id\": 1,\n    \"quantity\": 356,\n    \"unit_of_measure_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spect-item",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spect-item"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get spec-item sourcing options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId/option",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId",
+                "option"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "attach sourcing options",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"product_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId/option",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId",
+                "option"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "set winning option",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId/option/:productId/win",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId",
+                "option",
+                ":productId",
+                "win"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                },
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update spec item",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"spec-item 1\", // optional\n    \"description\": \"very good spec item\", // optional\n    \"category_id\": 1, // optional\n    \"quantity\": 356, // optional\n    \"unit_of_measure_id\": 1 // optional\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete spec item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete sourcing option",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/project/project/:projectId/spec-item/:specItemId/option/:productId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "project",
+                "project",
+                ":projectId",
+                "spec-item",
+                ":specItemId",
+                "option",
+                ":productId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                },
+                {
+                  "key": "specItemId",
+                  "value": ""
+                },
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "supplier",
+      "item": [
+        {
+          "name": "get supplier",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sourcing/supplier",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get a supplier by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get supplier's products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId/product",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId",
+                "product"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create a supplier",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"supplier 1\",\n    \"country\": \"USA\",\n    \"website\": \"https://supplier1.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/sourcing/supplier",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create supplier product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"product_name\": \"Product 1\",\n    \"category_id\": 1,\n    \"unit_price\": 35,\n    \"currency\": \"USD\",\n    \"unit_of_measure_id\": 1,\n    \"lead_time_days\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId/product",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId",
+                "product"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "modify supplier by id",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"supplier 1\", // optional\n    \"country\": \"USA\", // optional\n    \"website\": \"https://supplier1.com\" // optional\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete supplier by id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update a supplier's product",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"product_name\": \"Product 1\", // optional\n    \"category_id\": 1, // optional\n    \"unit_price\": 35, // optional\n    \"currency\": \"USD\", // optional\n    \"unit_of_measure_id\": 1, // optional\n    \"lead_time_days\": 10 // optional\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId/product/:productId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId",
+                "product",
+                ":productId"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                },
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete a supplier's product id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/sourcing/supplier/:supplierId/product/:productId",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "sourcing",
+                "supplier",
+                ":supplierId",
+                "product",
+                ":productId"
+              ],
+              "variable": [
+                {
+                  "key": "supplierId",
+                  "value": ""
+                },
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "units of measurement",
+      "item": [
+        {
+          "name": "get all units of measurement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/uom/uom",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "uom",
+                "uom"
               ]
             }
           },
