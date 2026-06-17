@@ -40,6 +40,7 @@ export const GlobalProductSearchTable = ({
   const columns: ColumnDef<IProductJoined>[] = [
     { accessorKey: "product_name", header: "Product" },
     { accessorKey: "supplier_name", header: "Supplier" },
+    { accessorKey: "category_name", header: "Category" },
     { accessorKey: "unit_price", header: "Price" },
     {
       id: "attach",
