@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 type SourcingSearch = {
   q?: string;
   category?: string;
+  supplier?: string;
 };
 
 export const Route = createFileRoute(
@@ -13,6 +14,7 @@ export const Route = createFileRoute(
     return {
       q: (search.q as string) || "",
       category: (search.category as string) || "",
+      supplier: (search.supplier as string) || "",
     };
   },
   component: SpecItemIdPage,

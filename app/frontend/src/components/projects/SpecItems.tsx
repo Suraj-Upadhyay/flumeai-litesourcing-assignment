@@ -13,6 +13,8 @@ import {
   useSetWinningOption,
 } from "@/domains/project/project.query";
 import { productQueries } from "@/domains/product/product.query"; // Fixed Import
+import { categoryQueries } from "@/domains/category/category.query"; // Fixed Import
+import { supplierQueries } from "@/domains/supplier/supplier.query"; // Fixed Import
 import { SourcingOptionsTable } from "./SourcingOptionsTable";
 import { GlobalProductSearchTable } from "./GlobalProductSearchTable";
 
@@ -46,19 +48,48 @@ export const AttachedOptionsPane = () => {
   );
 };
 
-export const GlobalCatalogPane = ({ searchQuery }: { searchQuery: string }) => {
+export const GlobalCatalogPane = ({
+  searchQuery,
+  category,
+  supplier,
+}: {
+  searchQuery: string;
+  category: string;
+  supplier: string;
+}) => {
   const { projectId, specItemId } = routeApi.useParams();
   const navigate = useNavigate({ from: routeApi.useMatch().fullPath });
 
-  // Fetch results based on the search query from URL using product queries
+  const categoryIds = category ? category.split(",").map(Number) : undefined;
+  const supplierIds = supplier ? supplier.split(",").map(Number) : undefined;
+
+  // 1. Fetch data for table
   const { data: products = [] } = useQuery(
-    productQueries.list({ query: searchQuery, limit: 20, offset: 0 })
+    productQueries.list({
+      query: searchQuery,
+      category_ids: categoryIds,
+      supplier_ids: supplierIds,
+      limit: 20,
+      offset: 0,
+    })
   );
+
+  // 2. Fetch options for dropdowns
+  const { data: categories = [] } = useQuery(categoryQueries.list());
+  const { data: suppliers = [] } = useQuery(supplierQueries.list());
+
   const { mutate: attachOption } = useAttachSourcingOption();
 
-  const handleSearchChange = (value: string) => {
-    // Sync search input to URL query parameter
-    navigate({ search: (prev) => ({ ...prev, q: value }) });
+  const handleFilterChange = (
+    key: "category" | "supplier",
+    values: string[]
+  ) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: values.length ? values.join(",") : undefined,
+      }),
+    });
   };
 
   return (
@@ -68,22 +99,32 @@ export const GlobalCatalogPane = ({ searchQuery }: { searchQuery: string }) => {
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4">
         <Input
-          placeholder="Search products by name..."
+          placeholder="Search..."
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) =>
+            navigate({ search: (prev) => ({ ...prev, q: e.target.value }) })
+          }
         />
-        <div className="flex-1 overflow-auto">
-          <GlobalProductSearchTable
-            data={products}
-            onAttach={(productId) =>
-              attachOption({
-                projectId: Number(projectId),
-                specItemId: Number(specItemId),
-                payload: { product_id: productId },
-              })
-            }
-          />
-        </div>
+        <GlobalProductSearchTable
+          data={products}
+          categories={categories.map((c) => ({
+            label: c.name,
+            value: String(c.id),
+          }))}
+          suppliers={suppliers.map((s) => ({
+            label: s.name,
+            value: String(s.id),
+          }))}
+          onAttach={(productId) =>
+            attachOption({
+              projectId: Number(projectId),
+              specItemId: Number(specItemId),
+              payload: { product_id: productId },
+            })
+          }
+          onCategoryChange={(vals) => handleFilterChange("category", vals)}
+          onSupplierChange={(vals) => handleFilterChange("supplier", vals)}
+        />
       </CardContent>
     </Card>
   );

@@ -7,12 +7,16 @@ import { getRouteApi } from "@tanstack/react-router";
 const routeApi = getRouteApi("/projects/$projectId/spec-items/$specItemId");
 
 export const SpecItemIdPage = () => {
-  const { q } = routeApi.useSearch();
+  const { q, category, supplier } = routeApi.useSearch();
 
   return (
     <div className="flex gap-6 h-150">
       <AttachedOptionsPane />
-      <GlobalCatalogPane searchQuery={q as string} />
+      <GlobalCatalogPane
+        searchQuery={q ?? ""}
+        category={category ?? ""}
+        supplier={supplier ?? ""}
+      />
     </div>
   );
 };
