@@ -1,17 +1,25 @@
-import { queryClient } from "@utility/queryClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as authService from "./auth.service";
 import type { ILoginRequest, ISignupRequest } from "./auth.types";
 
-export const logoutMutation = async () => {
-  const result = await authService.logout();
-  await queryClient.clear(); // Clear cached data on logout
-  return result;
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => authService.logout(),
+    onSuccess: () => {
+      queryClient.clear(); // Clear cached data on logout
+    },
+  });
 };
 
-export const signupMutation = async (payload: ISignupRequest) => {
-  return await authService.signup(payload);
+export const useSignup = () => {
+  return useMutation({
+    mutationFn: (payload: ISignupRequest) => authService.signup(payload),
+  });
 };
 
-export const loginMutation = async (payload: ILoginRequest) => {
-  return await authService.login(payload);
+export const useLogin = () => {
+  return useMutation({
+    mutationFn: (payload: ILoginRequest) => authService.login(payload),
+  });
 };

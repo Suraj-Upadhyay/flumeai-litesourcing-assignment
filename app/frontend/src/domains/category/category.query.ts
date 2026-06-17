@@ -1,56 +1,67 @@
-import { queryClient } from "@utility/queryClient";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import * as categoryService from "./category.service";
 import type {
   IGetCategoryFilterQuery,
   ICreateCategoryBody,
   IUpdateCategoryBody,
-  ICategory,
 } from "./category.types";
 
-export const getAllCategoriesQuery = async (
-  params?: IGetCategoryFilterQuery,
-): Promise<ICategory[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getAllCategories", params],
-    queryFn: () => categoryService.getAllCategories(params),
-    staleTime: 30_000,
-  });
+export const categoryQueries = {
+  all: () => ["categories"],
+  lists: () => [...categoryQueries.all(), "list"],
+  list: (params?: IGetCategoryFilterQuery) =>
+    queryOptions({
+      queryKey: [...categoryQueries.lists(), params],
+      queryFn: () => categoryService.getAllCategories(params),
+      staleTime: 30_000,
+    }),
+  details: () => [...categoryQueries.all(), "detail"],
+  detail: (id: number) =>
+    queryOptions({
+      queryKey: [...categoryQueries.details(), id],
+      queryFn: () => categoryService.getCategoryById(id),
+      staleTime: 30_000,
+    }),
 };
 
-export const getCategoryByIdQuery = async (
-  categoryId: number,
-): Promise<ICategory> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getCategoryById", categoryId],
-    queryFn: () => categoryService.getCategoryById(categoryId),
-    staleTime: 30_000,
-  });
-};
-
-export const createCategoryMutation = async (payload: ICreateCategoryBody) => {
-  const result = await categoryService.createCategory(payload);
-  await queryClient.invalidateQueries({ queryKey: ["getAllCategories"] });
-  return result;
-};
-
-export const modifyCategoryMutation = async (
-  categoryId: number,
-  payload: IUpdateCategoryBody,
-) => {
-  const result = await categoryService.modifyCategoryById(categoryId, payload);
-  await queryClient.invalidateQueries({
-    predicate: (query) => {
-      const keys = query.queryKey as string[];
-      return (
-        keys.includes("getAllCategories") || keys.includes("getCategoryById")
-      );
+export const useCreateCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: ICreateCategoryBody) =>
+      categoryService.createCategory(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryQueries.lists() });
     },
   });
-  return result;
 };
 
-export const deleteCategoryMutation = async (categoryId: number) => {
-  const result = await categoryService.deleteCategory(categoryId);
-  await queryClient.invalidateQueries({ queryKey: ["getAllCategories"] });
-  return result;
+export const useModifyCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      categoryId,
+      payload,
+    }: {
+      categoryId: number;
+      payload: IUpdateCategoryBody;
+    }) => categoryService.modifyCategoryById(categoryId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryQueries.all() });
+    },
+  });
+};
+
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (categoryId: number) =>
+      categoryService.deleteCategory(categoryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryQueries.lists() });
+    },
+  });
 };

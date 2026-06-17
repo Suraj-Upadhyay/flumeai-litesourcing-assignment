@@ -1,10 +1,10 @@
-import { queryClient } from "@utility/queryClient";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import * as projectService from "./project.service";
 import type {
-  IProject,
-  ISpecItem,
-  ISpecItemOption,
-  IProjectSummary,
   IGetProjectFilterQuery,
   ICreateProjectBody,
   IUpdateProjectStatusBody,
@@ -13,159 +13,191 @@ import type {
   IAttachSourcingOptionBody,
 } from "./project.types";
 
-export const getAllProjectsQuery = async (
-  params?: IGetProjectFilterQuery,
-): Promise<IProject[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getAllProjects", params],
-    queryFn: () => projectService.getAllProjects(params),
-    staleTime: 30_000,
+export const projectQueries = {
+  all: () => ["projects"],
+  lists: () => [...projectQueries.all(), "list"],
+  list: (params?: IGetProjectFilterQuery) =>
+    queryOptions({
+      queryKey: [...projectQueries.lists(), params],
+      queryFn: () => projectService.getAllProjects(params),
+      staleTime: 30_000,
+    }),
+  details: () => [...projectQueries.all(), "detail"],
+  detail: (id: number) =>
+    queryOptions({
+      queryKey: [...projectQueries.details(), id],
+      queryFn: () => projectService.getProjectById(id),
+      staleTime: 30_000,
+    }),
+  summaries: () => [...projectQueries.all(), "summary"],
+  summary: (id: number) =>
+    queryOptions({
+      queryKey: [...projectQueries.summaries(), id],
+      queryFn: () => projectService.getProjectSummary(id),
+      staleTime: 30_000,
+    }),
+  specItems: (id: number) =>
+    queryOptions({
+      queryKey: [...projectQueries.details(), id, "specItems"],
+      queryFn: () => projectService.getProjectSpecItems(id),
+      staleTime: 30_000,
+    }),
+  sourcingOptions: (projectId: number, specItemId: number) =>
+    queryOptions({
+      queryKey: [
+        ...projectQueries.details(),
+        projectId,
+        "specItems",
+        specItemId,
+        "options",
+      ],
+      queryFn: () =>
+        projectService.getSpecItemSourcingOptions(projectId, specItemId),
+      staleTime: 30_000,
+    }),
+};
+
+export const useCreateProject = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: ICreateProjectBody) =>
+      projectService.createProject(payload),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: projectQueries.lists() }),
   });
 };
 
-export const createProjectMutation = async (payload: ICreateProjectBody) => {
-  const result = await projectService.createProject(payload);
-  await queryClient.invalidateQueries({ queryKey: ["getAllProjects"] });
-  return result;
-};
-
-export const getProjectByIdQuery = async (
-  projectId: number,
-): Promise<IProject> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getProjectById", projectId],
-    queryFn: () => projectService.getProjectById(projectId),
-    staleTime: 30_000,
+export const useChangeProjectStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      payload,
+    }: {
+      projectId: number;
+      payload: IUpdateProjectStatusBody;
+    }) => projectService.changeProjectStatus(projectId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: projectQueries.all() }); // Updates list & detail
+    },
   });
 };
 
-export const changeProjectStatusMutation = async (
-  projectId: number,
-  payload: IUpdateProjectStatusBody,
-) => {
-  const result = await projectService.changeProjectStatus(projectId, payload);
-  await queryClient.invalidateQueries({
-    predicate: (query) =>
-      (query.queryKey as string[]).includes("getProjectById") ||
-      (query.queryKey as string[]).includes("getAllProjects"),
-  });
-  return result;
-};
-
-export const getProjectSummaryQuery = async (
-  projectId: number,
-): Promise<IProjectSummary> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getProjectSummary", projectId],
-    queryFn: () => projectService.getProjectSummary(projectId),
-    staleTime: 30_000,
+export const useCreateProjectSpecItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      payload,
+    }: {
+      projectId: number;
+      payload: ICreateSpecItemBody;
+    }) => projectService.createProjectSpecItem(projectId, payload),
+    onSuccess: (_, { projectId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.specItems(projectId).queryKey,
+      });
+    },
   });
 };
 
-export const getProjectSpecItemsQuery = async (
-  projectId: number,
-): Promise<ISpecItem[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getProjectSpecItems", projectId],
-    queryFn: () => projectService.getProjectSpecItems(projectId),
-    staleTime: 30_000,
+export const useAttachSourcingOption = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      specItemId,
+      payload,
+    }: {
+      projectId: number;
+      specItemId: number;
+      payload: IAttachSourcingOptionBody;
+    }) => projectService.attachSourcingOption(projectId, specItemId, payload),
+    onSuccess: (_, { projectId, specItemId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.sourcingOptions(projectId, specItemId)
+          .queryKey,
+      });
+    },
   });
 };
 
-export const createProjectSpecItemMutation = async (
-  projectId: number,
-  payload: ICreateSpecItemBody,
-) => {
-  const result = await projectService.createProjectSpecItem(projectId, payload);
-  await queryClient.invalidateQueries({
-    queryKey: ["getProjectSpecItems", projectId],
-  });
-  return result;
-};
-
-export const getSpecItemSourcingOptionsQuery = async (
-  projectId: number,
-  specItemId: number,
-): Promise<ISpecItemOption[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getSpecItemSourcingOptions", projectId, specItemId],
-    queryFn: () =>
-      projectService.getSpecItemSourcingOptions(projectId, specItemId),
-    staleTime: 30_000,
+export const useSetWinningOption = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      specItemId,
+      productId,
+    }: {
+      projectId: number;
+      specItemId: number;
+      productId: number;
+    }) => projectService.setWinningOption(projectId, specItemId, productId),
+    onSuccess: (_, { projectId, specItemId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.sourcingOptions(projectId, specItemId)
+          .queryKey,
+      });
+    },
   });
 };
 
-export const attachSourcingOptionMutation = async (
-  projectId: number,
-  specItemId: number,
-  payload: IAttachSourcingOptionBody,
-) => {
-  const result = await projectService.attachSourcingOption(
-    projectId,
-    specItemId,
-    payload,
-  );
-  await queryClient.invalidateQueries({
-    queryKey: ["getSpecItemSourcingOptions", projectId, specItemId],
+export const useUpdateSpecItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      specItemId,
+      payload,
+    }: {
+      projectId: number;
+      specItemId: number;
+      payload: IUpdateSpecItemBody;
+    }) => projectService.updateSpecItem(projectId, specItemId, payload),
+    onSuccess: (_, { projectId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.specItems(projectId).queryKey,
+      });
+    },
   });
-  return result;
 };
 
-export const setWinningOptionMutation = async (
-  projectId: number,
-  specItemId: number,
-  productId: number,
-) => {
-  const result = await projectService.setWinningOption(
-    projectId,
-    specItemId,
-    productId,
-  );
-  await queryClient.invalidateQueries({
-    queryKey: ["getSpecItemSourcingOptions", projectId, specItemId],
+export const useDeleteSpecItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      specItemId,
+    }: {
+      projectId: number;
+      specItemId: number;
+    }) => projectService.deleteSpecItem(projectId, specItemId),
+    onSuccess: (_, { projectId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.specItems(projectId).queryKey,
+      });
+    },
   });
-  return result;
 };
 
-export const updateSpecItemMutation = async (
-  projectId: number,
-  specItemId: number,
-  payload: IUpdateSpecItemBody,
-) => {
-  const result = await projectService.updateSpecItem(
-    projectId,
-    specItemId,
-    payload,
-  );
-  await queryClient.invalidateQueries({
-    queryKey: ["getProjectSpecItems", projectId],
+export const useDeleteSourcingOption = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      specItemId,
+      productId,
+    }: {
+      projectId: number;
+      specItemId: number;
+      productId: number;
+    }) => projectService.deleteSourcingOption(projectId, specItemId, productId),
+    onSuccess: (_, { projectId, specItemId }) => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueries.sourcingOptions(projectId, specItemId)
+          .queryKey,
+      });
+    },
   });
-  return result;
-};
-
-export const deleteSpecItemMutation = async (
-  projectId: number,
-  specItemId: number,
-) => {
-  const result = await projectService.deleteSpecItem(projectId, specItemId);
-  await queryClient.invalidateQueries({
-    queryKey: ["getProjectSpecItems", projectId],
-  });
-  return result;
-};
-
-export const deleteSourcingOptionMutation = async (
-  projectId: number,
-  specItemId: number,
-  productId: number,
-) => {
-  const result = await projectService.deleteSourcingOption(
-    projectId,
-    specItemId,
-    productId,
-  );
-  await queryClient.invalidateQueries({
-    queryKey: ["getSpecItemSourcingOptions", projectId, specItemId],
-  });
-  return result;
 };

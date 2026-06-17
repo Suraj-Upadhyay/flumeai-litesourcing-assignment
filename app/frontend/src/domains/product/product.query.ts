@@ -1,13 +1,14 @@
-import { queryClient } from "@utility/queryClient";
+import { queryOptions } from "@tanstack/react-query";
 import * as productService from "./product.service";
-import type { IGetProductFilterQuery, IProductJoined } from "./product.types";
+import type { IGetProductFilterQuery } from "./product.types";
 
-export const getFilteredProductsQuery = async (
-  params: IGetProductFilterQuery,
-): Promise<IProductJoined[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getFilteredProducts", params],
-    queryFn: () => productService.getFilteredProducts(params),
-    staleTime: 30_000,
-  });
+export const productQueries = {
+  all: () => ["products"],
+  lists: () => [...productQueries.all(), "list"],
+  list: (params: IGetProductFilterQuery) =>
+    queryOptions({
+      queryKey: [...productQueries.lists(), params],
+      queryFn: () => productService.getFilteredProducts(params),
+      staleTime: 30_000,
+    }),
 };

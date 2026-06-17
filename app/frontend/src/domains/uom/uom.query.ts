@@ -1,11 +1,12 @@
-import { queryClient } from "@utility/queryClient";
+import { queryOptions } from "@tanstack/react-query";
 import * as uomService from "./uom.service";
-import type { IUom } from "./uom.types";
 
-export const getAllUomsQuery = async (): Promise<IUom[]> => {
-  return await queryClient.fetchQuery({
-    queryKey: ["getAllUoms"],
-    queryFn: () => uomService.getAllUoms(),
-    staleTime: 60_000 * 60, // UOMs rarely change
-  });
+export const uomQueries = {
+  all: () => ["uoms"],
+  list: () =>
+    queryOptions({
+      queryKey: [...uomQueries.all(), "list"],
+      queryFn: () => uomService.getAllUoms(),
+      staleTime: 60_000 * 60, // UOMs rarely change
+    }),
 };
