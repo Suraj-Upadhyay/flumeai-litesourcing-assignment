@@ -1,13 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Button } from "@packages/ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@packages/ui/components/ui/dialog";
+import { SpecItemForm } from "./SpecItemForm";
 
 export const CreateSpecItemModal = ({ projectId }: { projectId: string }) => {
   const navigate = useNavigate();
@@ -18,7 +17,7 @@ export const CreateSpecItemModal = ({ projectId }: { projectId: string }) => {
 
   return (
     <Dialog open={true} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
           <DialogTitle>Add New Spec Item</DialogTitle>
           <DialogDescription>
@@ -26,16 +25,12 @@ export const CreateSpecItemModal = ({ projectId }: { projectId: string }) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4 text-sm text-slate-500">
-          [Form: Name, Category, Quantity, UoM, Description]
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleClose}>Add Spec Item</Button>
-        </DialogFooter>
+        {/* The form handles its own submission and action buttons */}
+        <SpecItemForm
+          projectId={Number(projectId)}
+          onSuccess={handleClose}
+          onCancel={handleClose}
+        />
       </DialogContent>
     </Dialog>
   );

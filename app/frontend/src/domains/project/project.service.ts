@@ -22,60 +22,60 @@ export const getAllProjects = async (params?: IGetProjectFilterQuery) => {
 export const createProject = async (payload: ICreateProjectBody) => {
   const response = await axiosInstance.post<IProject>(
     "/project/project",
-    payload,
+    payload
   );
   return response.data;
 };
 
 export const getProjectById = async (projectId: number) => {
   const response = await axiosInstance.get<IProject>(
-    `/project/project/${projectId}`,
+    `/project/project/${projectId}`
   );
   return response.data;
 };
 
 export const changeProjectStatus = async (
   projectId: number,
-  payload: IUpdateProjectStatusBody,
+  payload: IUpdateProjectStatusBody
 ) => {
   const response = await axiosInstance.patch<IProject>(
     `/project/project/${projectId}/status`,
-    payload,
+    payload
   );
   return response.data;
 };
 
 export const getProjectSummary = async (projectId: number) => {
   const response = await axiosInstance.get<IProjectSummary>(
-    `/project/project/${projectId}/summary`,
+    `/project/project/${projectId}/summary`
   );
   return response.data;
 };
 
 export const getProjectSpecItems = async (projectId: number) => {
   const response = await axiosInstance.get<ISpecItem[]>(
-    `/project/project/${projectId}/spec-item`,
+    `/project/project/${projectId}/spec-item`
   );
   return response.data;
 };
 
 export const createProjectSpecItem = async (
   projectId: number,
-  payload: ICreateSpecItemBody,
+  payload: ICreateSpecItemBody
 ) => {
   const response = await axiosInstance.post<ISpecItem>(
-    `/project/project/${projectId}/spect-item`,
-    payload,
+    `/project/project/${projectId}/spec-item`,
+    payload
   ); // 'spect-item' matching postman
   return response.data;
 };
 
 export const getSpecItemSourcingOptions = async (
   projectId: number,
-  specItemId: number,
+  specItemId: number
 ) => {
   const response = await axiosInstance.get<ISpecItemOption[]>(
-    `/project/project/${projectId}/spec-item/${specItemId}/option`,
+    `/project/project/${projectId}/spec-item/${specItemId}/option`
   );
   return response.data;
 };
@@ -83,11 +83,11 @@ export const getSpecItemSourcingOptions = async (
 export const attachSourcingOption = async (
   projectId: number,
   specItemId: number,
-  payload: IAttachSourcingOptionBody,
+  payload: IAttachSourcingOptionBody
 ) => {
   const response = await axiosInstance.post<ISpecItemOption>(
     `/project/project/${projectId}/spec-item/${specItemId}/option`,
-    payload,
+    payload
   );
   return response.data;
 };
@@ -95,10 +95,10 @@ export const attachSourcingOption = async (
 export const setWinningOption = async (
   projectId: number,
   specItemId: number,
-  productId: number,
+  productId: number
 ) => {
   const response = await axiosInstance.patch<null>(
-    `/project/project/${projectId}/spec-item/${specItemId}/option/${productId}/win`,
+    `/project/project/${projectId}/spec-item/${specItemId}/option/${productId}/win`
   );
   return response.data;
 };
@@ -106,18 +106,18 @@ export const setWinningOption = async (
 export const updateSpecItem = async (
   projectId: number,
   specItemId: number,
-  payload: IUpdateSpecItemBody,
+  payload: IUpdateSpecItemBody
 ) => {
   const response = await axiosInstance.patch<ISpecItem>(
     `/project/project/${projectId}/spec-item/${specItemId}`,
-    payload,
+    payload
   );
   return response.data;
 };
 
 export const deleteSpecItem = async (projectId: number, specItemId: number) => {
   const response = await axiosInstance.delete<null>(
-    `/project/project/${projectId}/spec-item/${specItemId}`,
+    `/project/project/${projectId}/spec-item/${specItemId}`
   );
   return response.data;
 };
@@ -125,10 +125,10 @@ export const deleteSpecItem = async (projectId: number, specItemId: number) => {
 export const deleteSourcingOption = async (
   projectId: number,
   specItemId: number,
-  productId: number,
+  productId: number
 ) => {
   const response = await axiosInstance.delete<null>(
-    `/project/project/${projectId}/spec-item/${specItemId}/option/${productId}`,
+    `/project/project/${projectId}/spec-item/${specItemId}/option/${productId}`
   );
   return response.data;
 };

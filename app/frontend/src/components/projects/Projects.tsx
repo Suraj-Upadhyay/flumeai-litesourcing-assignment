@@ -1,6 +1,5 @@
 import { Badge } from "@packages/ui/components/ui/badge";
 import { Button } from "@packages/ui/components/ui/button";
-import { Card, CardContent } from "@packages/ui/components/ui/card";
 import { Link } from "@tanstack/react-router";
 
 export function ProjectBreadcrumbs({ projectId }: { projectId: string }) {
@@ -92,15 +91,5 @@ export function ProjectsHeader() {
         <Link to="/projects/new">+ New Project</Link>
       </Button>
     </div>
-  );
-}
-
-export function ProjectsList() {
-  return (
-    <Card>
-      <CardContent className="p-0 min-h-100 flex items-center justify-center text-slate-400">
-        [TanStack Table: Projects List Placeholder]
-      </CardContent>
-    </Card>
   );
 }
