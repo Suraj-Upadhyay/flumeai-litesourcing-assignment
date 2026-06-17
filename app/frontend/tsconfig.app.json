@@ -19,7 +19,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@types/*": ["./src/types/*"],
+      "@utility/*": ["./src/utility/*"],
+      "@services/*": ["./src/services/*"],
+      "@queries/*": ["./src/queries/*"],
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }
