@@ -7,6 +7,7 @@ import type {
   IGetCategoryFilterQuery,
   IUpdateCategoryBody,
 } from "./category.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class CategoryRepositoryInterface {
@@ -28,6 +29,7 @@ export abstract class CategoryRepositoryInterface {
 
 @Primary
 export class CategoryRepositoryPrimary extends CategoryRepositoryInterface {
+  @Query
   async getFilteredCategories(
     filters: IGetCategoryFilterQuery,
   ): Promise<ICategoryDb[]> {
@@ -47,6 +49,7 @@ export class CategoryRepositoryPrimary extends CategoryRepositoryInterface {
     }
   }
 
+  @Query
   async getCategoryById(id: number): Promise<ICategoryDb | null> {
     try {
       const query = `SELECT id, name FROM categories WHERE id = $1;`;
@@ -58,6 +61,7 @@ export class CategoryRepositoryPrimary extends CategoryRepositoryInterface {
     }
   }
 
+  @Query
   async createCategory(data: ICreateCategoryBody): Promise<ICategoryDb> {
     try {
       const query = `INSERT INTO categories (name) VALUES ($1) RETURNING *;`;
@@ -75,6 +79,7 @@ export class CategoryRepositoryPrimary extends CategoryRepositoryInterface {
     }
   }
 
+  @Query
   async updateCategory(
     id: number,
     data: IUpdateCategoryBody,
@@ -96,6 +101,7 @@ export class CategoryRepositoryPrimary extends CategoryRepositoryInterface {
     }
   }
 
+  @Query
   async deleteCategory(id: number): Promise<boolean> {
     try {
       const query = `DELETE FROM categories WHERE id = $1 RETURNING id;`;

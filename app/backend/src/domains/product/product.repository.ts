@@ -5,6 +5,7 @@ import type {
   IGetProductFilterQuery,
   IProductJoinedDb,
 } from "./product.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class ProductRepositoryInterface {
@@ -18,6 +19,7 @@ export abstract class ProductRepositoryInterface {
 
 @Primary
 export class ProductRepositoryPrimary extends ProductRepositoryInterface {
+  @Query
   async getGlobalProducts(
     filters: IGetProductFilterQuery,
   ): Promise<IProductJoinedDb[]> {

@@ -11,6 +11,7 @@ import type {
   IUpdateProductBody,
   IUpdateSupplierBody,
 } from "./supplier.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class SourcingRepositoryInterface {
@@ -51,6 +52,7 @@ export abstract class SourcingRepositoryInterface {
 
 @Primary
 export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
+  @Query
   async getFilteredSuppliers(
     filters: IGetSupplierFilterQuery,
   ): Promise<ISupplierFilterResult[]> {
@@ -77,6 +79,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async getSupplierById(id: number): Promise<ISupplierFilterResult | null> {
     try {
       const query = `SELECT id, name, country, website FROM suppliers WHERE id = $1;`;
@@ -88,6 +91,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async getSupplierProducts(
     supplierId: number,
     filters: IGetProductFilterQuery,
@@ -119,6 +123,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async createSupplier(
     data: ICreateSupplierBody,
   ): Promise<ISupplierFilterResult> {
@@ -140,6 +145,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async updateSupplier(
     id: number,
     data: IUpdateSupplierBody,
@@ -167,6 +173,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async deleteSupplier(id: number): Promise<boolean> {
     try {
       const query = `DELETE FROM suppliers WHERE id = $1 RETURNING id;`;
@@ -178,6 +185,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async createSupplierProduct(
     supplierId: number,
     data: ICreateProductBody,
@@ -205,6 +213,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     }
   }
 
+  @Query
   async updateSupplierProduct(
     supplierId: number,
     productId: number,
@@ -255,6 +264,7 @@ export class SourcingRepositoryPrimary extends SourcingRepositoryInterface {
     return rows[0] || null;
   }
 
+  @Query
   async deleteSupplierProduct(
     supplierId: number,
     productId: number,

@@ -2,6 +2,7 @@ import { AbstractClass, Primary } from "@/di/injector";
 import { asyncLocalStorage, InternalServerError } from "@/utility";
 import type { PoolClient } from "pg";
 import type { ICountryDb } from "./country.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class CountryRepositoryInterface {
@@ -13,6 +14,7 @@ export abstract class CountryRepositoryInterface {
 
 @Primary
 export class CountryRepositoryPrimary extends CountryRepositoryInterface {
+  @Query
   async getAllCountries(): Promise<ICountryDb[]> {
     try {
       const { rows } = await this.client.query(

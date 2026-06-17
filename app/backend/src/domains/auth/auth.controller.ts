@@ -35,7 +35,7 @@ export class AuthController {
       domain: serverDomain || "",
       maxAge: MONTH_IN_MS / 1000,
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
       secure: nodeEnv === "production" ? true : false,
       path: "/",
     } as CookieSerializeOptions;
@@ -61,7 +61,7 @@ export class AuthController {
       domain: serverDomain || "",
       maxAge: MONTH_IN_MS / 1000,
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
       secure: nodeEnv === "production" ? true : false,
       path: "/",
     } as CookieSerializeOptions;

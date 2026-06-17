@@ -2,6 +2,7 @@ import { AbstractClass, Primary } from "@/di/injector";
 import { asyncLocalStorage, InternalServerError } from "@/utility";
 import type { PoolClient } from "pg";
 import type { IUomDb } from "./uom.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class UomRepositoryInterface {
@@ -13,6 +14,7 @@ export abstract class UomRepositoryInterface {
 
 @Primary
 export class UomRepositoryPrimary extends UomRepositoryInterface {
+  @Query
   async getAllUoms(): Promise<IUomDb[]> {
     try {
       const { rows } = await this.client.query(

@@ -9,8 +9,6 @@ export const verifyJWT = (tokenName: string) => {
   return async (req: FastifyRequest) => {
     const token = req.cookies[tokenName];
 
-    console.log("token: ", token);
-
     if (!token) {
       throw new Unauthorized("Unauthorized request");
     }

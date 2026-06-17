@@ -13,6 +13,7 @@ import type {
   ISpecItemOptionDb,
   IUpdateSpecItemBody,
 } from "./project.schema";
+import { Query } from "@/db";
 
 @AbstractClass()
 export abstract class ProjectRepositoryInterface {
@@ -61,6 +62,7 @@ export abstract class ProjectRepositoryInterface {
 
 @Primary
 export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
+  @Query
   async getFilteredProjects(
     filters: IGetProjectFilterQuery,
   ): Promise<IProjectDb[]> {
@@ -88,6 +90,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     }
   }
 
+  @Query
   async getProjectById(id: number): Promise<IProjectDb | null> {
     const { rows } = await this.client.query(
       `SELECT * FROM projects WHERE id = $1`,
@@ -96,6 +99,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0] || null;
   }
 
+  @Query
   async createProject(data: ICreateProjectBody): Promise<IProjectDb> {
     const query = `
       INSERT INTO projects (project_name, client_name) 
@@ -108,6 +112,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0];
   }
 
+  @Query
   async updateProjectStatus(
     id: number,
     status: IProjectStatus,
@@ -120,6 +125,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0];
   }
 
+  @Query
   async getSpecItems(projectId: number): Promise<ISpecItemDb[]> {
     const { rows } = await this.client.query(
       `SELECT * FROM spec_items WHERE project_id = $1 ORDER BY id ASC`,
@@ -128,6 +134,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows;
   }
 
+  @Query
   async createSpecItem(
     projectId: number,
     data: ICreateSpecItemBody,
@@ -148,6 +155,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0];
   }
 
+  @Query
   async attachSourcingOption(
     specItemId: number,
     data: IAttachSourcingOptionBody,
@@ -159,6 +167,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     await this.client.query(query, [specItemId, data.product_id]);
   }
 
+  @Query
   async getSourcingOptions(specItemId: number): Promise<ISpecItemOptionDb[]> {
     const query = `
       SELECT sip.spec_item_id, sip.product_id, sip.is_winning,
@@ -173,6 +182,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows;
   }
 
+  @Query
   async setWinningOption(specItemId: number, productId: number): Promise<void> {
     // Elegant trick to set only one row to true and the rest to false
     const query = `
@@ -183,6 +193,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     await this.client.query(query, [specItemId, productId]);
   }
 
+  @Query
   async getProjectSummary(projectId: number): Promise<IProjectSummary> {
     // Calculates summary metrics strictly based on winning options
     const query = `
@@ -200,6 +211,7 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0];
   }
 
+  @Query
   async updateSpecItem(
     specItemId: number,
     data: IUpdateSpecItemBody,
@@ -246,12 +258,14 @@ export class ProjectRepositoryPrimary extends ProjectRepositoryInterface {
     return rows[0] || null;
   }
 
+  @Query
   async deleteSpecItem(specItemId: number): Promise<boolean> {
     const query = `DELETE FROM spec_items WHERE id = $1 RETURNING id;`;
     const { rowCount } = await this.client.query(query, [specItemId]);
     return (rowCount ?? 0) > 0;
   }
 
+  @Query
   async deleteSourcingOption(
     specItemId: number,
     productId: number,
