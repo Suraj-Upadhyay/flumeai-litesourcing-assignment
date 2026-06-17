@@ -1,6 +1,7 @@
 import { Button } from "@packages/ui/components/ui/button";
 import { Card, CardContent } from "@packages/ui/components/ui/card";
 import { Link } from "@tanstack/react-router";
+import { SuppliersTable } from "./SuppliersTable";
 
 export function SupplierBreadcrumbs({ supplierId }: { supplierId: string }) {
   return (
@@ -43,9 +44,9 @@ export function SuppliersHeader() {
 
 export function SuppliersList() {
   return (
-    <Card>
-      <CardContent className="p-0 min-h-100 flex items-center justify-center text-slate-400">
-        [TanStack Table: Supplier Directory Placeholder]
+    <Card className="overflow-hidden">
+      <CardContent className="p-0 min-h-100 flex flex-col">
+        <SuppliersTable />
       </CardContent>
     </Card>
   );

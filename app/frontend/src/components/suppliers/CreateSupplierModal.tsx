@@ -1,13 +1,12 @@
-import { Button } from "@packages/ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@packages/ui/components/ui/dialog";
 import { useNavigate } from "@tanstack/react-router";
+import { CreateSupplierForm } from "./CreateSupplierForm"; // Adjust import path as needed
 
 export function CreateSupplierModal() {
   const navigate = useNavigate();
@@ -26,16 +25,7 @@ export function CreateSupplierModal() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4 text-sm text-slate-500">
-          [Form: Name, Country, Website]
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleClose}>Save Supplier</Button>
-        </DialogFooter>
+        <CreateSupplierForm onSuccess={handleClose} onCancel={handleClose} />
       </DialogContent>
     </Dialog>
   );
