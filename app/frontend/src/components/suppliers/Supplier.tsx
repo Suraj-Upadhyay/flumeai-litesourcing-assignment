@@ -2,6 +2,7 @@ import { Button } from "@packages/ui/components/ui/button";
 import { Card, CardContent } from "@packages/ui/components/ui/card";
 import { Link } from "@tanstack/react-router";
 import { SuppliersTable } from "./SuppliersTable";
+import type { ISupplier } from "@/domains/supplier/supplier.types";
 
 export function SupplierBreadcrumbs({ supplierId }: { supplierId: string }) {
   return (
@@ -15,11 +16,13 @@ export function SupplierBreadcrumbs({ supplierId }: { supplierId: string }) {
   );
 }
 
-export function SupplierInfo() {
+export function SupplierInfo({ supplier }: { supplier: ISupplier }) {
   return (
     <div className="flex gap-4 text-sm text-slate-600 mt-2">
-      <span className="flex items-center gap-1">📍 Country Name</span>
-      <span className="flex items-center gap-1">🌐 website.com</span>
+      <span className="flex items-center gap-1">📍 {supplier.country}</span>
+      {supplier.website && (
+        <span className="flex items-center gap-1">🌐 {supplier.website}</span>
+      )}
     </div>
   );
 }
