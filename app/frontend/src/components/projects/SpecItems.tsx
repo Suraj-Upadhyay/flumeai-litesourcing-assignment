@@ -17,11 +17,15 @@ import { categoryQueries } from "@/domains/category/category.query"; // Fixed Im
 import { supplierQueries } from "@/domains/supplier/supplier.query"; // Fixed Import
 import { SourcingOptionsTable } from "./SourcingOptionsTable";
 import { GlobalProductSearchTable } from "./GlobalProductSearchTable";
+import { useState } from "react";
 
 const routeApi = getRouteApi("/projects/$projectId/spec-items/$specItemId");
 
 export const AttachedOptionsPane = () => {
   const { projectId, specItemId } = routeApi.useParams();
+
+  const [offset, setOffset] = useState(0);
+  const limit = 10;
   const { data: options = [] } = useQuery(
     projectQueries.sourcingOptions(Number(projectId), Number(specItemId))
   );
@@ -35,6 +39,9 @@ export const AttachedOptionsPane = () => {
       <CardContent className="flex-1 overflow-auto">
         <SourcingOptionsTable
           data={options}
+          limit={limit}
+          offset={offset}
+          onPageChange={setOffset}
           onSetWinner={(productId) =>
             setWinner({
               projectId: Number(projectId),
@@ -57,6 +64,8 @@ export const GlobalCatalogPane = ({
   category: string;
   supplier: string;
 }) => {
+  const [offset, setOffset] = useState(0);
+  const limit = 10;
   const { projectId, specItemId } = routeApi.useParams();
   const navigate = useNavigate({ from: routeApi.useMatch().fullPath });
 
@@ -75,8 +84,8 @@ export const GlobalCatalogPane = ({
       query: searchQuery,
       category_ids: categoryIds,
       supplier_ids: supplierIds,
-      limit: 20,
-      offset: 0,
+      limit: limit,
+      offset: offset,
     })
   );
 
@@ -99,11 +108,11 @@ export const GlobalCatalogPane = ({
   };
 
   return (
-    <Card className="flex-1 flex flex-col">
+    <Card className="flex-1 flex flex-col min-h-0">
       <CardHeader>
         <CardTitle className="text-lg">Search Global Catalog</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-4">
+      <CardContent className="flex-1 flex flex-col gap-4 min-h-0">
         <Input
           placeholder="Search..."
           value={searchQuery}
@@ -121,6 +130,9 @@ export const GlobalCatalogPane = ({
             label: s.name,
             value: String(s.id),
           }))}
+          limit={limit}
+          offset={offset}
+          onPageChange={setOffset}
           onAttach={(productId) =>
             attachOption({
               projectId: Number(projectId),
