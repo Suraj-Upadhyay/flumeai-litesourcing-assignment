@@ -28,7 +28,8 @@ const columns = [
     cell: (info) => (
       // Link to the project details page
       <Link
-        to={`/projects/${info.row.original.id}`}
+        to="/projects/$projectId"
+        params={{ projectId: String(info.row.original.id) }}
         className="font-medium text-slate-900 hover:text-blue-600 hover:underline"
       >
         {info.getValue()}
