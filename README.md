@@ -38,5 +38,8 @@
 * **Robust Auth/Roles:** Integrate multi-user support (e.g., "Buyer" vs. "Admin" permissions).
 * **UX Refinement:** Add "Untoggle" functionality for winning items to provide more flexibility in the comparison phase, provided it adheres to state-integrity guardrails.
 
+## 5. Deployment
+The project has been deployed on [render](https://flumeai-litesourcing-assignment-frontend.onrender.com);
+
 ---
 *This documentation is structured to walk the evaluator through my decision-making process, highlighting the "why" behind the architecture and my strategic focus on core product value.*
